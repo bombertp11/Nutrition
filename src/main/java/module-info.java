@@ -3,6 +3,6 @@ module com.example.nutrition {
     requires javafx.fxml;
             
                             
-    opens com.example.nutrition to javafx.fxml;
-    exports com.example.nutrition;
+    opens Boundary to javafx.fxml;
+    exports Boundary;
 }
