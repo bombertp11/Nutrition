@@ -7,6 +7,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * This class controls the user interface by changing the pane to the corresponding view that the user has chosen
+ *
+ * @author Isaac Hotop
+ */
 public class UserInterface extends Application {
     @Override
     public void start(Stage stage) throws IOException {
