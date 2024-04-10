@@ -1,7 +1,7 @@
 package Control;
 
 /**
- * This class validates user input
+ * This class validates user input to prevent injection attacks and general user errors
  *
  * @author Isaac Hotop
  */
