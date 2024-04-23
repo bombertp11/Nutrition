@@ -13,6 +13,7 @@ public class FoodDatabaseManagement {
 
     }
 
+
     /**
      * connectDatabase
      * Loads the JDBC driver then uses the user's username and password to connect to the database
