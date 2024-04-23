@@ -1,8 +1,10 @@
 package Boundary;
 
+import Control.InputValidation;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -21,24 +23,48 @@ public class SignIn extends Application {
     @Override
     public void start(Stage stage) throws IOException, ClassNotFoundException {
 
-        //Create login page
-        GridPane loginPane = new GridPane();
+        //Create signIn page
+        GridPane signInPane = new GridPane();
         HBox hBox = new HBox();
-        loginPane.setAlignment(Pos.CENTER);
+        signInPane.setAlignment(Pos.CENTER);
         hBox.setAlignment(Pos.CENTER);
-        loginPane.add(hBox, 0, 0);
+        signInPane.add(hBox, 0, 0);
 
-        //Create login fields and buttons and add them to loginPage
+        //Create sign in fields and buttons and add them to SignInPage
         TextField usrNameField = new TextField();
         TextField passwdField = new TextField();
-        Button loginBtn = new Button("Login");
+        Button signInBtn = new Button("Sign In");
         Label status = new Label("Enter your username and password above");
         usrNameField.setPromptText("Username:");
         passwdField.setPromptText("Password:");
         hBox.getChildren().addAll(usrNameField, passwdField);
-        loginPane.add(loginBtn, 0, 1);
-        loginPane.add(status, 0, 2);
-        loginPane.setHalignment(loginBtn, HPos.CENTER);
-        loginPane.setHalignment(status, HPos.CENTER);
+        signInPane.add(signInBtn, 0, 1);
+        signInPane.add(status, 0, 2);
+        signInPane.setHalignment(signInBtn, HPos.CENTER);
+        signInPane.setHalignment(status, HPos.CENTER);
+
+        //gets credentials from the textFields, validates them, then attempts a connection to the database when signinBtn is clicked
+        signInBtn.setOnAction(e -> {
+            InputValidation inputValidation = new InputValidation();
+            FoodDatabaseManagement foodDatabaseManagement = new FoodDatabaseManagement();
+
+            if (inputValidation.UsernamePasswordValidation(usrNameField.getText(), passwdField.getText())) {
+                try {
+                    foodDatabaseManagement.connectDatabase(usrNameField.getText(), passwdField.getText());
+                }
+                catch (ClassNotFoundException e1) {
+                    throw new RuntimeException(e1);
+                }
+            }
+            else {
+                status.setText("Login Failed...");
+            }
+        });
+
+        //Sets the scene as SignInPane
+        Scene scene = new Scene(signInPane, 550, 300);
+        stage.setTitle("Calorie Tracker");
+        stage.setScene(scene);
+        stage.show();
     }
 }

@@ -6,4 +6,39 @@ package Control;
  * @author Isaac Hotop
  */
 public class InputValidation {
+    char[] badChars = {'\'', '"', ';', '`', '-', '_', '(', ')', '[', ']', '*', '=', '/', '\\', '%', '>', '<', '$', '&', '|'};
+
+    /**
+     * UsernamePasswordValidation
+     * Checks for certain special characters and string length to prevent against injection attacks
+     *
+     * @param username the user's username
+     * @param password the user's password
+     * @return true if username and password is valid or false if not valid
+     */
+    public boolean UsernamePasswordValidation(String username, String password) {
+        //Checks for string length and if it contains any characters that could be used in injection attacks
+        if(username.length() <= 20 && password.length() <= 20) {
+
+            for (char uc : username.toCharArray()) {
+                for (char bc : badChars) {
+                    if (uc == bc) {
+                        //username contains a bad character; failed
+                        return false;
+                    }
+                }
+            }
+            for (char pc : password.toCharArray()) {
+                for (char bc : badChars) {
+                    if (pc == bc) {
+                        //password contains a bad character; failed
+                        return false;
+                    }
+                }
+            }
+            //username and password passed all the checks
+            return true;
+        }
+        return false;
+    }
 }
