@@ -20,21 +20,24 @@ import java.sql.PreparedStatement;
  *
  * This class alows the user to securely sign in, sign out, or sign up to access or create their account
  */
-public class SignIn extends Application {
-    @Override
-    public void start(Stage stage) throws IOException, ClassNotFoundException {
+public class SignIn {
+    GridPane signInPane;
+    GridPane addUserPane;
+    Button addUserBtn;
+    Button backBtn;
+    public SignIn() throws ClassNotFoundException {
         InputValidation inputValidation = new InputValidation();
         FoodDatabaseManagement foodDatabaseManagement = new FoodDatabaseManagement();
 
         //Create signIn pane
-        GridPane signInPane = new GridPane();
+        signInPane = new GridPane();
         HBox hBox = new HBox();
         signInPane.setAlignment(Pos.CENTER);
         hBox.setAlignment(Pos.CENTER);
         signInPane.add(hBox, 0, 0);
 
         //Create addUser pane
-        GridPane addUserPane = new GridPane();
+        addUserPane = new GridPane();
         HBox addUserHbox = new HBox();
         addUserPane.setAlignment(Pos.CENTER);
         addUserHbox.setAlignment(Pos.CENTER);
@@ -44,7 +47,7 @@ public class SignIn extends Application {
         TextField usrNameField = new TextField();
         TextField passwdField = new TextField();
         Button signInBtn = new Button("Sign In");
-        Button addUserBtn = new Button("Create New User");
+        addUserBtn = new Button("Create New User");
         Label status = new Label("Enter your username and password above");
         usrNameField.setPromptText("Username:");
         passwdField.setPromptText("Password:");
@@ -61,7 +64,7 @@ public class SignIn extends Application {
         TextField addPasswdField = new TextField();
         TextField passwdConfirmation = new TextField();
         Button createUserBtn = new Button("Create User");
-        Button backBtn = new Button("Back to Sign in Page");
+        backBtn = new Button("Back to Sign in Page");
         addUsrNamefield.setPromptText("Username:");
         addPasswdField.setPromptText("Password:");
         passwdConfirmation.setPromptText("Confirm Password:");
@@ -70,12 +73,6 @@ public class SignIn extends Application {
         addUserPane.add(status,1,2);
         addUserPane.add(backBtn,0,3);
         addUserPane.add(createUserBtn,2,3);
-
-        //Sets the scene as SignInPane
-        Scene scene = new Scene(signInPane, 550, 300);
-        stage.setTitle("Calorie Tracker");
-        stage.setScene(scene);
-        stage.show();
 
         //gets credentials from the textFields, validates them, then attempts a connection to the database when signInBtn is clicked
         signInBtn.setOnAction(e -> {
@@ -87,16 +84,6 @@ public class SignIn extends Application {
             else {
                 status.setText("Login Failed...");
             }
-        });
-
-        //sets the root of the scene to addUserPane when addUserBtn is clicked
-        addUserBtn.setOnAction(e -> {
-            scene.setRoot(addUserPane);
-        });
-
-        //resets the scene's root back to SignInPane when backBtn is clicked
-        backBtn.setOnAction(e -> {
-            scene.setRoot(signInPane);
         });
 
         //Gets credentials from the textFields, validates them, then creates a query to add the user and their
@@ -121,5 +108,35 @@ public class SignIn extends Application {
 
         });
 
+    }
+
+    /**
+     * @return signInPane
+     */
+    public GridPane getSignInPane() {
+        return signInPane;
+    }
+
+    /**
+     * @return addUserPane
+     */
+    public GridPane getAddUserPane() {
+        return addUserPane;
+    }
+
+    /**
+     *
+     * @return addUserBtn
+     */
+    public Button getAddUserBtn() {
+        return addUserBtn;
+    }
+
+    /**
+     *
+     * @return backBtn
+     */
+    public Button getBackBtn() {
+        return backBtn;
     }
 }
