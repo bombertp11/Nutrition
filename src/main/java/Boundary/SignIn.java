@@ -10,10 +10,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 /**
  * @author Isaac Hotop
@@ -78,10 +78,18 @@ public class SignIn {
         //gets credentials from the textFields, validates them, then attempts a connection to the database when signInBtn is clicked
         signInBtn.setOnAction(e -> {
             if (inputValidation.UsernamePasswordValidation(usrNameField.getText(), passwdField.getText())) {
-                userinterface
+                try {
+                    if(foodDatabaseManagement.signInUser(usrNameField.getText(), passwdField.getText())) {
+                        userinterface.switchMenuPane();
+                    }
+                }
+                catch (SQLException e1) {
+                    status.setText("Wrong username or password");
+                    throw new RuntimeException(e1);
+                }
             }
             else {
-                status.setText("Login Failed...");
+                status.setText("Login Credentials were not valid");
             }
         });
 

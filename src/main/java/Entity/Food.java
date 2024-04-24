@@ -9,11 +9,11 @@ package Entity;
 public class Food {
     private final String name;
     private final int cals;
-    private final int protein;
-    private final int carbs;
-    private final int fats;
+    private final double protein;
+    private final double carbs;
+    private final double fats;
 
-    public Food(String name, int cals, int protein, int carbs, int fats) {
+    public Food(String name, int cals, double protein, double carbs, double fats) {
         this.name = name;
         this.cals = cals;
         this.protein = protein;
@@ -29,15 +29,15 @@ public class Food {
         return cals;
     }
 
-    public int getProtein() {
+    public double getProtein() {
         return protein;
     }
 
-    public int getCarbs() {
+    public double getCarbs() {
         return carbs;
     }
 
-    public int getFats() {
+    public double getFats() {
         return fats;
     }
 }

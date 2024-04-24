@@ -15,55 +15,38 @@ public class User {
     private final String username;
     private List<Food> dailyIntake;
     private List<Food> weeklyIntake;
-    private List<Food> monthlyIntake;
+
 
     public User(String userID, String username) {
         this.userID = userID;
         this.username = username;
         this.dailyIntake = new ArrayList<>();
         this.weeklyIntake = new ArrayList<>();
-        this.monthlyIntake = new ArrayList<>();
     }
 
     public String getUserID() {
         return userID;
     }
 
-    public void addFoodEntry(List<Food> list, String period, List<String> foods) {
-        list.add(new Food(period, foods));
+    /**
+     * Adds food to dailyIntake and weeklyIntake
+     * @param food
+     */
+    public void addFood(Food food) {
+        dailyIntake.add(food);
+        weeklyIntake.add(food);
     }
 
-    public List<String> getFoodsByPeriod(List<Food> list, String period) {
-        for (Food entry : list) {
-            if (entry.getPeriod().equals(period)) {
-                return entry.getFoods();
-            }
-        }
-        return null; // or throw an exception if the period is not found
-    }
-
-    public void addDailyIntake(String date, List<String> foods) {
-        addFoodEntry(dailyIntake, date, foods);
-    }
-
-    public void addWeeklyIntake(String week, List<String> foods) {
-        addFoodEntry(weeklyIntake, week, foods);
-    }
-
-    public void addMonthlyIntake(String month, List<String> foods) {
-        addFoodEntry(monthlyIntake, month, foods);
-    }
-
-    public List<String> getDailyIntake(String date) {
+    /*public List<String> getDailyIntake(String date) {
         return getFoodsByPeriod(dailyIntake, date);
     }
 
     public List<String> getWeeklyIntake(String week) {
         return getFoodsByPeriod(weeklyIntake, week);
-    }
+    }*/
 
-    public List<String> getMonthlyIntake(String month) {
-        return getFoodsByPeriod(monthlyIntake, month);
+    public String getUsername() {
+        return username;
     }
 }
 

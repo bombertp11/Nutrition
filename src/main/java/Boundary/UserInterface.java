@@ -6,7 +6,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -18,7 +20,8 @@ import java.io.IOException;
  * @author Isaac Hotop
  */
 public class UserInterface extends Application {
-    Scene scene;
+    private static Scene scene;
+    private static BorderPane menuPane;
     @Override
     public void start(Stage stage) throws IOException, ClassNotFoundException {
         SignIn signIn = new SignIn();
@@ -38,22 +41,32 @@ public class UserInterface extends Application {
         signIn.getBackBtn().setOnAction(e -> {
             scene.setRoot(signIn.getSignInPane());
         });
+
     }
 
-    public UserInterface() {
+    public UserInterface() throws ClassNotFoundException {
         //Create and add modules to menuPane
-        BorderPane menuPane = new BorderPane();
+        menuPane = new BorderPane();
         HBox bottomPane = new HBox();
+        VBox centerPane = new VBox();
         Button signOutBtn = new Button("Sign Out");
         Button logFoodBtn = new Button("Log Food");
         Button reportBtn = new Button("Generate Report");
-        Label welcomeLabel = new Label("Hello")
+        Label calorieTotal = new Label("Total: Calories");
+        bottomPane.getChildren().addAll(logFoodBtn, reportBtn);
+        menuPane.setTop(signOutBtn);
+        menuPane.setBottom(bottomPane);
+        menuPane.setCenter(centerPane);
+
+        //Add graph to menuPane
+
 
     }
 
-    public void switchToMenu() {
-        scene.setRoot()
+    public void switchMenuPane() {
+        scene.setRoot(menuPane);
     }
+
     public static void main(String[] args) {
         launch();
     }
