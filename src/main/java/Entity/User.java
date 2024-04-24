@@ -12,12 +12,14 @@ import java.util.List;
  */
 public class User {
     private final String userID;
+    private final String username;
     private List<Food> dailyIntake;
     private List<Food> weeklyIntake;
     private List<Food> monthlyIntake;
 
-    public User(String userID) {
+    public User(String userID, String username) {
         this.userID = userID;
+        this.username = username;
         this.dailyIntake = new ArrayList<>();
         this.weeklyIntake = new ArrayList<>();
         this.monthlyIntake = new ArrayList<>();

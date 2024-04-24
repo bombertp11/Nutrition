@@ -28,6 +28,7 @@ public class SignIn {
     public SignIn() throws ClassNotFoundException {
         InputValidation inputValidation = new InputValidation();
         FoodDatabaseManagement foodDatabaseManagement = new FoodDatabaseManagement();
+        UserInterface userinterface = new UserInterface();
 
         //Create signIn pane
         signInPane = new GridPane();
@@ -77,7 +78,7 @@ public class SignIn {
         //gets credentials from the textFields, validates them, then attempts a connection to the database when signInBtn is clicked
         signInBtn.setOnAction(e -> {
             if (inputValidation.UsernamePasswordValidation(usrNameField.getText(), passwdField.getText())) {
-
+                userinterface
             }
             else {
                 status.setText("Login Failed...");
