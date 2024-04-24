@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class User {
     private final String userID;
-    private List<FoodEntry> dailyIntake;
-    private List<FoodEntry> weeklyIntake;
-    private List<FoodEntry> monthlyIntake;
+    private List<Food> dailyIntake;
+    private List<Food> weeklyIntake;
+    private List<Food> monthlyIntake;
 
     public User(String userID) {
         this.userID = userID;
@@ -27,12 +27,12 @@ public class User {
         return userID;
     }
 
-    public void addFoodEntry(List<FoodEntry> list, String period, List<String> foods) {
-        list.add(new FoodEntry(period, foods));
+    public void addFoodEntry(List<Food> list, String period, List<String> foods) {
+        list.add(new Food(period, foods));
     }
 
-    public List<String> getFoodsByPeriod(List<FoodEntry> list, String period) {
-        for (FoodEntry entry : list) {
+    public List<String> getFoodsByPeriod(List<Food> list, String period) {
+        for (Food entry : list) {
             if (entry.getPeriod().equals(period)) {
                 return entry.getFoods();
             }
