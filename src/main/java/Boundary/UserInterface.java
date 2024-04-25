@@ -22,9 +22,13 @@ import java.io.IOException;
 public class UserInterface extends Application {
     private static Scene scene;
     private static BorderPane menuPane;
+    private static Button signOutBtn;
+    private static Button logFoodBtn;
+    private static Button reportBtn;
     @Override
     public void start(Stage stage) throws IOException, ClassNotFoundException {
         SignIn signIn = new SignIn();
+        LogFood logFood = new LogFood();
 
         //Initially set pane to signInPane
         scene = new Scene(signIn.getSignInPane(), 550, 300);
@@ -42,6 +46,17 @@ public class UserInterface extends Application {
             scene.setRoot(signIn.getSignInPane());
         });
 
+        //sets the root to logFoodPane when logFoodBtn is clicked
+        logFoodBtn.setOnAction(e -> {
+            scene.setRoot(logFood.getLogFoodPane());
+        });
+
+        //Sets the root to menuPane when backBtn in logFoodPane is clicked
+        logFood.getBackBtn().setOnAction(e -> {
+            scene.setRoot(menuPane);
+        });
+
+
     }
 
     public UserInterface() throws ClassNotFoundException {
@@ -49,9 +64,9 @@ public class UserInterface extends Application {
         menuPane = new BorderPane();
         HBox bottomPane = new HBox();
         VBox centerPane = new VBox();
-        Button signOutBtn = new Button("Sign Out");
-        Button logFoodBtn = new Button("Log Food");
-        Button reportBtn = new Button("Generate Report");
+        signOutBtn = new Button("Sign Out");
+        logFoodBtn = new Button("Log Food");
+        reportBtn = new Button("Generate Report");
         Label calorieTotal = new Label("Total: Calories");
         bottomPane.getChildren().addAll(logFoodBtn, reportBtn);
         menuPane.setTop(signOutBtn);

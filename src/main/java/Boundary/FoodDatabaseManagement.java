@@ -99,9 +99,9 @@ public class FoodDatabaseManagement {
      * @param foodName the name of the food that needs to be looked up in FoodDatabase.csv
      * @return Food Object that contains the food info from FoodDatabase.csv
      */
-    public Food getFood (String foodName) {
+    public Food findFood (String foodName) {
         String line;
-        try (BufferedReader br = new BufferedReader(new FileReader("src/FoodDatabase.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("FoodDatabase.csv"))) {
             while ((line = br.readLine()) != null) {
                 // Split the line by commas
                 String[] foodInfo = line.split(",");
