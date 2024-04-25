@@ -107,7 +107,7 @@ public class FoodDatabaseManagement {
                 String[] foodInfo = line.split(",");
 
                 // return the Food Object
-                return new Food(foodInfo[0], Integer.parseInt(foodInfo[1]), Double.parseDouble(foodInfo[2]),
+                return new Food(foodInfo[0].trim(), Integer.parseInt(foodInfo[1]), Double.parseDouble(foodInfo[2]),
                         Double.parseDouble(foodInfo[3]), Double.parseDouble(foodInfo[4]));
             }
         } catch (IOException e) {

@@ -21,10 +21,10 @@ import java.sql.SQLException;
  * This class alows the user to securely sign in, sign out, or sign up to access or create their account
  */
 public class SignIn {
-    GridPane signInPane;
-    GridPane addUserPane;
-    Button addUserBtn;
-    Button backBtn;
+    private GridPane signInPane;
+    private GridPane addUserPane;
+   private Button addUserBtn;
+    private Button backBtn;
     public SignIn() throws ClassNotFoundException {
         InputValidation inputValidation = new InputValidation();
         FoodDatabaseManagement foodDatabaseManagement = new FoodDatabaseManagement();
