@@ -11,14 +11,12 @@ import java.util.List;
  * @author Isaac Hotop
  */
 public class User {
-    private final int userID;
     private final String username;
-    private List<Food> dailyIntake;
-    private List<Food> weeklyIntake;
+    private ArrayList<Food> dailyIntake;
+    private ArrayList<Food> weeklyIntake;
 
 
-    public User(int userID, String username) {
-        this.userID = userID;
+    public User(String username) {
         this.username = username;
         this.dailyIntake = new ArrayList<>();
         this.weeklyIntake = new ArrayList<>();
@@ -50,20 +48,16 @@ public class User {
         dailyIntake.add(food);
     }
 
-    /*public List<String> getDailyIntake(String date) {
-        return getFoodsByPeriod(dailyIntake, date);
+    public ArrayList<Food> getDailyIntake() {
+        return dailyIntake;
     }
 
-    public List<String> getWeeklyIntake(String week) {
-        return getFoodsByPeriod(weeklyIntake, week);
-    }*/
+    public ArrayList<Food> getWeeklyIntake() {
+        return weeklyIntake;
+    }
 
     public String getUsername() {
         return username;
-    }
-
-    public int getUserID() {
-        return userID;
     }
 }
 

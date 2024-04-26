@@ -8,6 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
+import java.time.LocalDate;
+
 /**
  * @author Isaac Hotop
  *
@@ -20,6 +22,7 @@ public class LogFood {
     public LogFood() throws ClassNotFoundException {
         FoodDatabaseManagement foodDatabaseManagement = new FoodDatabaseManagement();
         InputValidation inputValidation = new InputValidation();
+        UserInterface userInterface = new UserInterface();
 
         //Create logFoodPane
         logFoodPane = new BorderPane();
@@ -41,8 +44,15 @@ public class LogFood {
                 Food userFood = foodDatabaseManagement.findFood(foodField.getText());
 
                 //Checks if the food was found, if so then add food to User
-                if (!userFood.getName().equals("Error")) {
+                if (!userFood.getName().equals("<Error>")) {
+                    userInterface.getCurrentUser().addCurrentFood(userFood);
 
+                    if (foodDatabaseManagement.addFoodEntry(LocalDate.now(), userFood.getName())) {
+                        status.setText(userFood.getName() + " was added!");
+                    }
+                    else {
+                        status.setText(userFood.getName() + " could not be added");
+                    }
                 }
                 else {
                     status.setText("Food was not found in the database");

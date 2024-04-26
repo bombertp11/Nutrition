@@ -13,17 +13,43 @@ import javafx.scene.chart.PieChart;
  */
 public class GenerateGraph {
     PieChart pieChart;
+
     private ObservableList<PieChart.Data> pieChartData;
-    public GenerateGraph(double totalProtein, double totalCarbs, double totalFats) {
+
+    /**
+     * Creates a graph that displays the total grams of protein, carbohydrates, and fats
+     * @param totalProteinG amount of protein in grams that the user has consumed
+     * @param totalCarbsG amount of carbohydrates in grams that the user has consumed
+     * @param totalFatsG amount of fats in grams that the user has consumed
+     * @return pieChart
+     */
+    public PieChart generateGraphInGrams(double totalProteinG, double totalCarbsG, double totalFatsG) {
         pieChartData = FXCollections.observableArrayList(
-                new PieChart.Data("Proteins", totalProtein),
-                new PieChart.Data("Carbohydrates", totalCarbs),
-                new PieChart.Data("Fats", totalFats)
+                new PieChart.Data("Grams of Protein", totalProteinG),
+                new PieChart.Data("Grams of Carbohydrates", totalCarbsG),
+                new PieChart.Data("Grams of Fats", totalFatsG)
         );
         pieChart = new PieChart(pieChartData);
-    }
-
-    public PieChart getGraph() {
+        pieChart.setTitle("Daily Intake of Macronutrients in Grams");
         return pieChart;
     }
+
+    /**
+     * Creates a graph that displays the total Calories of protein, carbohydrates, and fats
+     * @param totalProteinC amount of protein in Calories that the user has consumed
+     * @param totalCarbsC amount of carbohydrates in Calories that the user has consumed
+     * @param totalFatsC amount of fats in Calories that the user has consumed
+     * @return pieChart
+     */
+    public PieChart generateGraphInCalories(double totalProteinC, double totalCarbsC, double totalFatsC) {
+        pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("Calories in Proteins", totalProteinC),
+                new PieChart.Data("Calories in Carbohydrates", totalCarbsC),
+                new PieChart.Data("Calories in Fats", totalFatsC)
+        );
+        pieChart = new PieChart(pieChartData);
+        pieChart.setTitle("Daily Intake of Macronutrients in Calories");
+        return pieChart;
+    }
+
 }

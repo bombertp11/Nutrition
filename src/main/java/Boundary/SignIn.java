@@ -82,7 +82,12 @@ public class SignIn {
             if (inputValidation.UsernamePasswordValidation(usrNameField.getText(), passwdField.getText())) {
                 try {
                     User user = foodDatabaseManagement.signInUser(usrNameField.getText(), passwdField.getText());
-                        userinterface.switchMenuPane();
+                    if (!user.getUsername().equals("<Error>")) {
+                        userinterface.switchMenuPane(user);
+                    }
+                    else {
+                        status.setText("Could not load User data");
+                    }
 
                 }
                 catch (SQLException e1) {

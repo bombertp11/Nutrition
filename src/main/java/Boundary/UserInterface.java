@@ -1,11 +1,14 @@
 package Boundary;
 
+import Control.CalculateCalories;
 import Entity.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -13,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * This class controls the user interface by changing the pane to the corresponding view that the user has chosen
@@ -31,9 +35,10 @@ public class UserInterface extends Application {
     public void start(Stage stage) throws IOException, ClassNotFoundException {
         SignIn signIn = new SignIn();
         LogFood logFood = new LogFood();
+        currentUser = new User("Empty");
 
         //Initially set pane to signInPane
-        scene = new Scene(signIn.getSignInPane(), 550, 300);
+        scene = new Scene(signIn.getSignInPane(), 700, 550);
         stage.setTitle("Calorie Calculator");
         stage.setScene(scene);
         stage.show();
@@ -55,7 +60,14 @@ public class UserInterface extends Application {
 
         //Sets the root to menuPane when backBtn in logFoodPane is clicked
         logFood.getBackBtn().setOnAction(e -> {
+            updateGraph("gram", "daily");
             scene.setRoot(menuPane);
+        });
+
+        //Resets current user and sets the root to signInPane when signOutBtn is clicked
+        signOutBtn.setOnAction(e -> {
+            currentUser = new User("<Empty>");
+            scene.setRoot(signIn.getSignInPane());
         });
 
 
@@ -65,7 +77,6 @@ public class UserInterface extends Application {
         //Create and add modules to menuPane
         menuPane = new BorderPane();
         HBox bottomPane = new HBox();
-        VBox centerPane = new VBox();
         signOutBtn = new Button("Sign Out");
         logFoodBtn = new Button("Log Food");
         reportBtn = new Button("Generate Report");
@@ -73,16 +84,70 @@ public class UserInterface extends Application {
         bottomPane.getChildren().addAll(logFoodBtn, reportBtn);
         menuPane.setTop(signOutBtn);
         menuPane.setBottom(bottomPane);
-        menuPane.setCenter(centerPane);
-
-        //Add graph to menuPane
-
-
     }
 
+    /**
+     * Switches to menuPane
+     * @param user
+     */
     public void switchMenuPane(User user) {
-        currentUser = currentUser;
+        currentUser = user;
+        updateGraph("gram","daily");
         scene.setRoot(menuPane);
+    }
+
+    public void updateGraph(String gramOrCal, String dailyOrWeekly) {
+        CalculateCalories calculateCalories = new CalculateCalories();
+        GenerateGraph generateGraph = new GenerateGraph();
+
+        //Get total daily calories, proteins, carbs, and fats
+        ArrayList<Double> dailyMacroGrams;
+        ArrayList<Double> dailyMacroCals;
+        int dailyCal = calculateCalories.calculateTotalCal(currentUser.getDailyIntake());
+        dailyMacroGrams = calculateCalories.calculateTotalMacronutrientGrams(currentUser.getDailyIntake());
+        dailyMacroCals = calculateCalories.calculateTotalMacronutrientCals(currentUser.getDailyIntake());
+
+        //Get total weekly calories, proteins, carbs, and fats
+        ArrayList<Double> weeklyMacroGrams;
+        ArrayList<Double> weeklyMacroCals;
+        int weeklyCal = calculateCalories.calculateTotalCal(currentUser.getWeeklyIntake());
+        weeklyMacroGrams = calculateCalories.calculateTotalMacronutrientGrams(currentUser.getWeeklyIntake());
+        weeklyMacroCals = calculateCalories.calculateTotalMacronutrientCals(currentUser.getWeeklyIntake());
+
+        //Create graph with eiter weekly or daily and with either Calories or Grams data then add the graph to the menuPane
+        if(gramOrCal.equals("gram")) {
+            if(dailyOrWeekly.equals("daily")) {
+                PieChart pieChart = generateGraph.generateGraphInGrams(dailyMacroGrams.get(0), dailyMacroGrams.get(1), dailyMacroGrams.get(2));
+                pieChart.getData().forEach(data -> {
+                    String label = (data.getPieValue() + " grams");
+                    Tooltip toolTip = new Tooltip(label);
+                    Tooltip.install(data.getNode(), toolTip);
+                });
+                menuPane.setCenter(pieChart);
+            }
+            else {
+                PieChart pieChart = generateGraph.generateGraphInGrams(weeklyMacroGrams.get(0), weeklyMacroGrams.get(1), weeklyMacroGrams.get(2));
+                menuPane.setCenter(pieChart);
+            }
+        }
+        else {
+            if (dailyOrWeekly.equals("daily")) {
+                PieChart pieChart = generateGraph.generateGraphInCalories(dailyMacroCals.get(0), dailyMacroCals.get(1), dailyMacroCals.get(2));
+                menuPane.setCenter(pieChart);
+            }
+            else {
+                PieChart pieChart = generateGraph.generateGraphInCalories(weeklyMacroCals.get(0), weeklyMacroCals.get(1), weeklyMacroCals.get(2));
+                menuPane.setCenter(pieChart);
+            }
+        }
+    }
+
+    /**
+     *
+     * @return currentUser
+     */
+    public User getCurrentUser() {
+        return currentUser;
     }
 
     public static void main(String[] args) {

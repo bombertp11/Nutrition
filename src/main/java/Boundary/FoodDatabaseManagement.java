@@ -19,6 +19,7 @@ import java.time.temporal.TemporalAdjusters;
  */
 public class FoodDatabaseManagement {
     Connection connection;
+    private static String currentUsername;
     public FoodDatabaseManagement() throws ClassNotFoundException {
          /*
         Load JDBC driver
@@ -42,7 +43,7 @@ public class FoodDatabaseManagement {
      * Retrieves the user's data from the database and creates a User object to store the data in.
      * @param username The user's username
      * @param password The user's password
-     * @return true if successfully signed in and retrieved user data, returns false if not
+     * @return User object
      * @throws SQLException
      */
     public User signInUser(String username, String password) throws SQLException {
@@ -52,13 +53,11 @@ public class FoodDatabaseManagement {
             LocalDate startOfWeek = currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
             LocalDate endOfWeek = startOfWeek.plusDays(6);
 
-            //Connects to database using user's credentials then retrieves user info from the database
+            //Connects to database using user's credentials
             Connection userConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", username, password);
-            PreparedStatement userInfo = userConnection.prepareStatement("SELECT * FROM " + username + "_table");
-            ResultSet userResult = userInfo.executeQuery();
 
             //Creates a User class with the info retrieved from the database
-            User user = new User(userResult.getInt("id"), userResult.getString("username"));
+            User user = new User(username);
 
             //Creates a Food class for each food retrieved from the user's table
             PreparedStatement foodInfo = userConnection.prepareStatement("SELECT food, food_date FROM "+username+"_table");
@@ -76,7 +75,6 @@ public class FoodDatabaseManagement {
                     if(foodDate.isEqual(currentDate)) {
                         user.addDailyIntake(food);
                         user.addWeeklyIntake(food);
-                        break;
                     }
                     //Checks if foodDate falls within the current week
                     if(foodDate.isEqual(startOfWeek) || (foodDate.isAfter(startOfWeek) && foodDate.isBefore(endOfWeek))) {
@@ -84,11 +82,14 @@ public class FoodDatabaseManagement {
                     }
                 }
             }
+            //Sign in was successful
+            currentUsername = username;
             return user;
         }
         catch (SQLException e) {
+            //Sign in failed
             e.printStackTrace();
-            return new User(0,"Error");
+            return new User("<Error>");
             }
     }
 
@@ -108,7 +109,7 @@ public class FoodDatabaseManagement {
             addUser.executeUpdate();
 
             //Creates the user's table
-            PreparedStatement addUserTable = connection.prepareStatement("CREATE TABLE "+username+"_table (id INT AUTO_INCREMENT PRIMARY KEY, food_date DATE, food VARCHAR(255))");
+            PreparedStatement addUserTable = connection.prepareStatement("CREATE TABLE "+username+"_table (food_date DATE, food VARCHAR(255))");
             addUserTable.executeUpdate();
 
             //Grant permissions to the new user
@@ -134,18 +135,40 @@ public class FoodDatabaseManagement {
      */
     public Food findFood (String foodName) {
         String line;
-        try (BufferedReader br = new BufferedReader(new FileReader("FoodDatabase.csv"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader("src/main/resources/FoodDatabase.csv"))) {
             while ((line = br.readLine()) != null) {
                 // Split the line by commas
                 String[] foodInfo = line.split(",");
 
-                // return the Food Object
-                return new Food(foodInfo[0].trim(), Integer.parseInt(foodInfo[1]), Double.parseDouble(foodInfo[2]),
-                        Double.parseDouble(foodInfo[3]), Double.parseDouble(foodInfo[4]));
+                if(foodInfo[0].equals(foodName)) {
+                    // return the Food Object
+                    return new Food(foodInfo[0].trim(), Integer.parseInt(foodInfo[1].trim()), Double.parseDouble(foodInfo[2].trim()),
+                            Double.parseDouble(foodInfo[3].trim()), Double.parseDouble(foodInfo[4].trim()));
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Food("Error",0,0,0,0);
+        return new Food("<Error>",0,0,0,0);
+    }
+
+    /**
+     * Adds food and food date to user's table
+     * @param date LocalDate
+     * @param foodName String
+     * @return true if successfully added to user's table, false if not
+     */
+    public boolean addFoodEntry(LocalDate date, String foodName) {
+        try {
+            PreparedStatement addFood = connection.prepareStatement("INSERT INTO " + currentUsername + "_table (food_date, food) VALUES ('" + date + "', ?)");
+            addFood.setString(1, foodName);
+            addFood.executeUpdate();
+
+            return true;
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
