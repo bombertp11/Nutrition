@@ -1,5 +1,6 @@
 package Boundary;
 
+import Entity.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,6 +26,7 @@ public class UserInterface extends Application {
     private static Button signOutBtn;
     private static Button logFoodBtn;
     private static Button reportBtn;
+    private static User currentUser;
     @Override
     public void start(Stage stage) throws IOException, ClassNotFoundException {
         SignIn signIn = new SignIn();
@@ -78,7 +80,8 @@ public class UserInterface extends Application {
 
     }
 
-    public void switchMenuPane() {
+    public void switchMenuPane(User user) {
+        currentUser = currentUser;
         scene.setRoot(menuPane);
     }
 

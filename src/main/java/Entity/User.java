@@ -11,30 +11,43 @@ import java.util.List;
  * @author Isaac Hotop
  */
 public class User {
-    private final String userID;
+    private final int userID;
     private final String username;
     private List<Food> dailyIntake;
     private List<Food> weeklyIntake;
 
 
-    public User(String userID, String username) {
+    public User(int userID, String username) {
         this.userID = userID;
         this.username = username;
         this.dailyIntake = new ArrayList<>();
         this.weeklyIntake = new ArrayList<>();
     }
 
-    public String getUserID() {
-        return userID;
+
+    /**
+     * Adds current food entered by the user (not retrieved from the user's table) to dailyIntake and weeklyIntake
+     * @param food
+     */
+    public void addCurrentFood(Food food) {
+        dailyIntake.add(food);
+        weeklyIntake.add(food);
     }
 
     /**
-     * Adds food to dailyIntake and weeklyIntake
+     * Adds food fromm the user's table that fits into the current week to weeklyIntake
      * @param food
      */
-    public void addFood(Food food) {
-        dailyIntake.add(food);
+    public void addWeeklyIntake(Food food) {
         weeklyIntake.add(food);
+    }
+
+    /**
+     * Adds food from the user's table from today to dailyIntake
+     * @param food
+     */
+    public void addDailyIntake(Food food) {
+        dailyIntake.add(food);
     }
 
     /*public List<String> getDailyIntake(String date) {
@@ -47,6 +60,10 @@ public class User {
 
     public String getUsername() {
         return username;
+    }
+
+    public int getUserID() {
+        return userID;
     }
 }
 

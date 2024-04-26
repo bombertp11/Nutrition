@@ -1,11 +1,15 @@
 package Boundary;
 
 import Entity.Food;
+import Entity.User;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 /**
  * This class allows the admin to make changes to the food database and contains a method that connects the program to
@@ -35,27 +39,56 @@ public class FoodDatabaseManagement {
 
     /**
      * signInUser
-     * Retrives the user's data from the database and creates a User object to store the data in.
+     * Retrieves the user's data from the database and creates a User object to store the data in.
      * @param username The user's username
      * @param password The user's password
      * @return true if successfully signed in and retrieved user data, returns false if not
      * @throws SQLException
      */
-    public boolean signInUser(String username, String password) throws SQLException {
+    public User signInUser(String username, String password) throws SQLException {
         try {
+            //Gets current date and week
+            LocalDate currentDate = LocalDate.now();
+            LocalDate startOfWeek = currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            LocalDate endOfWeek = startOfWeek.plusDays(6);
+
             //Connects to database using user's credentials then retrieves user info from the database
             Connection userConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/users", username, password);
-            PreparedStatement signIn = userConnection.prepareStatement("SELECT * FROM " + username + "_table");
-            ResultSet userInfo = signIn.executeQuery();
+            PreparedStatement userInfo = userConnection.prepareStatement("SELECT * FROM " + username + "_table");
+            ResultSet userResult = userInfo.executeQuery();
 
             //Creates a User class with the info retrieved from the database
+            User user = new User(userResult.getInt("id"), userResult.getString("username"));
 
+            //Creates a Food class for each food retrieved from the user's table
+            PreparedStatement foodInfo = userConnection.prepareStatement("SELECT food, food_date FROM "+username+"_table");
+            ResultSet foodResult = foodInfo.executeQuery();
 
-            return true;
+            while(foodResult.next()) {
+                String foodName = foodResult.getString("food");
+                Food food = findFood(foodName);
+
+                //If food exists in database, then add it to the corresponding food array in User
+                if(!food.getName().equals("Error")) {
+                    LocalDate foodDate = foodResult.getDate("food_date").toLocalDate();
+
+                    //Checks if food is from today
+                    if(foodDate.isEqual(currentDate)) {
+                        user.addDailyIntake(food);
+                        user.addWeeklyIntake(food);
+                        break;
+                    }
+                    //Checks if foodDate falls within the current week
+                    if(foodDate.isEqual(startOfWeek) || (foodDate.isAfter(startOfWeek) && foodDate.isBefore(endOfWeek))) {
+                        user.addWeeklyIntake(food);
+                    }
+                }
+            }
+            return user;
         }
         catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return new User(0,"Error");
             }
     }
 

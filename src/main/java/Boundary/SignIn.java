@@ -1,6 +1,8 @@
 package Boundary;
 
 import Control.InputValidation;
+import Entity.Food;
+import Entity.User;
 import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -79,9 +81,9 @@ public class SignIn {
         signInBtn.setOnAction(e -> {
             if (inputValidation.UsernamePasswordValidation(usrNameField.getText(), passwdField.getText())) {
                 try {
-                    if(foodDatabaseManagement.signInUser(usrNameField.getText(), passwdField.getText())) {
+                    User user = foodDatabaseManagement.signInUser(usrNameField.getText(), passwdField.getText());
                         userinterface.switchMenuPane();
-                    }
+
                 }
                 catch (SQLException e1) {
                     status.setText("Wrong username or password");
