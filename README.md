@@ -4,7 +4,7 @@
 - GenerateGraph UI
     - For pie chart options
  
-**--HOW TO GET THE DATABASE CONNECTED--**
+**-----HOW TO GET THE DATABASE CONNECTED-----**
 - You need to download the JDBC driver
       - We used this website: https://dev.mysql.com/downloads/connector/j/
 - Add the JDBC jar file to the project's dependencies
