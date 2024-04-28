@@ -31,6 +31,8 @@ public class GenerateGraph {
         );
         pieChart = new PieChart(pieChartData);
         pieChart.setTitle("Daily Intake of Macronutrients in Grams");
+        pieChart.setStyle("-fx-border-color: black; -fx-border-width: 2px;"); //set pie chart border
+        
         return pieChart;
     }
 
@@ -49,6 +51,19 @@ public class GenerateGraph {
         );
         pieChart = new PieChart(pieChartData);
         pieChart.setTitle("Daily Intake of Macronutrients in Calories");
+        pieChartData.forEach(data ->{
+            if(data.getName().equals("Calories in Proteins")){      //sets pie piece color by data
+                data.getNode().setStyle("-fx-pie-color: #FFD700;");
+            }
+            else if(data.getName().equals("Calories in Carbohydrates")){      //sets pie piece color by data
+                data.getNode().setStyle("-fx-pie-color: #ADD8E6;");
+            }
+            if(data.getName().equals("Calories in Fats")){      //sets pie piece color by data
+                data.getNode().setStyle("-fx-pie-color: #FFA07A;");
+            }
+
+        });
+        
         return pieChart;
     }
 
